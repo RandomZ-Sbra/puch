@@ -1,9 +1,3 @@
----
-runme:
-  id: 01HTSRCDVD1MFW4F5NGRW6H8PH
-  version: v3
----
-
 # Puch
 
 ---
