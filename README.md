@@ -8,8 +8,14 @@ Esta versión está incompleta, la primera versión funcional será la 1.0; dura
 
 ### TODO:
 
-- Lista de cosas por hacer (todavía no implementada)
-
+- [x] Lista de cosas por hacer (todavía no implementada)
+- [x] Cambiar estructura del proyecto
+- [ ] Establecer protocolo de comunicación entre peers
+- [ ] Crear servicios para modificar contactos
+- [ ] Crear un proyecto para los "Trusted Servers"
+- [ ] Modificar el programa principal (puch.c) para redistribuir los servicios
+- [ ] Crear libretas de forma aleatoria y un protocolo de libretas para el cifrado
+- [ ] En cada mensaje se envía la información con la posición de la libreta con la que se ha cifrado el mensaje así como el número de protocolo (diferentes protocolos para diferentes operaciones con la libreta para cifrar y descifrar).
 ---
 
 ## Índice
@@ -41,19 +47,19 @@ En el entorno se puede especificar la variable **PUCH_PATH** para personalizar e
 
 Descargue el fichero puch.c y genere el ejecutable con gcc:
 
-```sh {"id":"01HTST9CP9C9PFA0D63VJX4R3R"}
+```sh
 gcc puch.c -o puch
 ```
 
 Inicialice la aplicación (en futuras versiones se pretende añadir opciones y argumentos...):
 
-```sh {"id":"01HTSRCDVD1MFW4F5NGKPD7KQJ"}
+```sh
 ./puch
 ```
 
 Opcionalmente se puede especificar el directorio de destino declaranto la variable de entorno ``PUCH_PATH``:
 
-```sh {"id":"01HTSTEPE8G5ZH7MCGKPTF546Q"}
+```sh
 env PUCH_PATH="/home/usuario/miDirectorio/directorioPuch" ./puch
 ```
 

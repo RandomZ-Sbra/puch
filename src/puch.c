@@ -14,6 +14,13 @@
 #define PORT 8080
 #define BUFF_SIZE 16384
 
+typedef struct puch
+{
+	char *host;
+	
+} puch_t;
+
+
 void enable_raw_mode();
 void disable_raw_mode();
 
@@ -29,11 +36,13 @@ int main(int argc, char const *argv[])
 	FILE *messages;
 	FILE *rec_lib;
 	FILE *send_lib;
+	FILE *t_srv_host;
 
 	// FOR DEBUG
 	// putenv(PATH);
 	// setenv(PATH, "/mnt/e/visual studio/c/puch", 1);
 
+	// Entorno y direcciones a carpetas
 	if (!getenv(PATH))
 	{
 		dir = "/var/lib/puch-messages-v0.2";
@@ -90,12 +99,14 @@ int main(int argc, char const *argv[])
 		}
 		mkdir(ldir, 0664);
 	}
+
+	// Comprueba si el contacto existe
 	if (argc == 1)
 	{
 		printf("Introduce nombre del contacto deseado: ");
 		if (!fgets(contact, sizeof(contact), stdin))
 		{
-			printf("\n");
+			printf("No se ha encontrado el contacto insertado\n");
 			exit(0);
 		}
 		contact[strcspn(contact, "\r\n")] = '\0';
@@ -130,7 +141,7 @@ int main(int argc, char const *argv[])
 	}
 	free(cdir);
 	cdir = aux;
-	aux = (char *)malloc((strlen(cdir) + strlen("/libretas/Recibir")));
+	aux = (char *)malloc((strlen(cdir) + strlen("/libretas/Recibir")) * sizeof(char));
 	strcpy(aux, cdir);
 	strcat(aux, "/libretas/Recibir");
 	rec_lib = fopen(aux, "R");
@@ -156,7 +167,7 @@ int main(int argc, char const *argv[])
 		char response;
 		fprintf(stdout, "No se ha encontrado el fichero del Trusted Server, ¿desea crear uno? (y/n) default y: ");
 		response = fgetc(stdin);
-		if (response != 'n')
+		if (response != 'n' && response != 'N')
 		{
 			while (1)
 			{
@@ -164,7 +175,7 @@ int main(int argc, char const *argv[])
 				fprintf(stdout, "Host (nombre o dirección): ");
 				fgets(host, sizeof(host), stdin);
 				host[strcspn(host, "\r\n")] = '\0';
-				FILE *t_srv_host = fopen(aux, O_WRONLY | O_CREAT | O_TRUNC); //TODO:
+				t_srv_host = fopen(aux, O_WRONLY | O_CREAT | O_TRUNC); //TODO:
 			}
 		} else 
 		{
@@ -173,19 +184,20 @@ int main(int argc, char const *argv[])
 		}
 	}
 	
+	// Proceso t_server
 	if (t_srv_ready)
 	{
 		pid_t t_srv = fork();
 
-		if (t_srv = -1) 
+		if (t_srv == -1) 
 		{
 			perror("0xFF");
 			fprintf(stderr, "Error al generar proceso de conexión al Trusted Server...\nSaliendo\n");
 			exit(EXIT_FAILURE);
 		}
-		else if (t_srv = 0)
+		else if (t_srv == 0)
 		{
-
+			// TODO...
 		}
 		else
 		{
@@ -197,21 +209,22 @@ int main(int argc, char const *argv[])
 
 			}
 		}
+	}
 	return 0;
 }
 
-void enable_raw_mode()
-{
-	struct termios t;
-	tcgetattr(STDIN_FILENO, &t);
-	t.c_lflag &= ~(ICANON | ECHO); // Desactivar el modo canónico y el eco
-	tcsetattr(STDIN_FILENO, TCSANOW, &t);
-}
+// void enable_raw_mode()
+// {
+// 	struct termios t;
+// 	tcgetattr(STDIN_FILENO, &t);
+// 	t.c_lflag &= ~(ICANON | ECHO); // Desactivar el modo canónico y el eco
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+// }
 
-void disable_raw_mode()
-{
-	struct termios t;
-	tcgetattr(STDIN_FILENO, &t);
-	t.c_lflag |= (ICANON | ECHO); // Restaurar el modo canónico y el eco
-	tcsetattr(STDIN_FILENO, TCSANOW, &t);
-}
+// void disable_raw_mode()
+// {
+// 	struct termios t;
+// 	tcgetattr(STDIN_FILENO, &t);
+// 	t.c_lflag |= (ICANON | ECHO); // Restaurar el modo canónico y el eco
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+// }
